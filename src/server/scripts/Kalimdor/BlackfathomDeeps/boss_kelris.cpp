@@ -21,16 +21,16 @@
 
 enum Spells
 {
-    SPELL_MIND_BLAST                                       = 15587,
-    SPELL_SLEEP                                            = 8399,
+    SPELL_MIND_BLAST  = 15587,
+    SPELL_SLEEP       = 8399,
 };
 
 //Id's from ACID
 enum Yells
 {
-    SAY_AGGRO                                              = -1048002,
-    SAY_SLEEP                                              = -1048001,
-    SAY_DEATH                                              = -1048000
+    SAY_AGGRO         = -1048002,
+    SAY_SLEEP         = -1048001,
+    SAY_DEATH         = -1048000
 };
 
 class boss_kelris : public CreatureScript

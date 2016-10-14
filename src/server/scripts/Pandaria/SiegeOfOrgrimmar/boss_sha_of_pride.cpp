@@ -1,3 +1,20 @@
+/*
+* Copyright (C) 2008-2015 TrinityCore <http://www.trinitycore.org/>
+* Copyright (C) 2016-20XX JadeCore <https://www.jadecore.tk/>
+*
+* This program is free software; you can redistribute it and/or modify it
+* under the terms of the GNU General Public License as published by the
+* Free Software Foundation; either version 2 of the License, or (at your
+* option) any later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+* more details.
+*
+* You should have received a copy of the GNU General Public License along
+* with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include "GameObjectAI.h"
 #include "siege_of_orgrimmar.h"
@@ -10,12 +27,12 @@ General Information: (Icy-veins.com):
 
 1.1. Health Values
 
-Difficulty	Sha of Pride	Manifestations of Pride	Reflections	Corrupted Fragment
-10-man	425M	1.7M	2.4M	Heroic-only
-10-man Heroic	660M	4.40M	2.75M	4.73
-25-man	1.2B	4M	5.6M	Heroic-only
-25-man Heroic	1.85B	5.6M	7.7M	4.7M
-LFR	???M	???
+Difficulty    Sha of Pride    Manifestations of Pride    Reflections    Corrupted Fragment
+  10-man         425M                  1.7M                 2.4M            Heroic-only
+10-man Heroic    660M                  4.40M                2.75M               4.73
+  25-man         1.2B                   4M                  5.6M            Heroic-only
+25-man Heroic    1.85B                 5.6M                 7.7M                4.7M
+   LFR           ???M                  ???
 
 1.2. Enrage Timer
 We do not know if this fight has a hard enrage timer. When the Sha of Pride reaches 30% health, the raid will constantly gain 5 Pride every 10 seconds, meaning that you will have about 200 seconds to kill the boss from that moment.
@@ -66,44 +83,44 @@ INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, 
 
 enum Spells
 {
-    SPELL_AURA_OF_PRIDE_AURA = 146817,
-    SPELL_PRIDE_METER = 144343,
-    SPELL_GIFT_OF_TITAN = 144359,
-    SPELL_POWER_OF_THE_TITANS = 144364,
-    SPELL_SWELLING_PRIDE = 144400,
-    SPELL_BANISHMENT = 145215,
-    SPELL_BURSTING_PRIDE = 144910,
-    SPELL_PROJECTION_PROJECTILE = 145066,
-    SPELL_PROJECTION_DUMMY = 144952,
-    SPELL_PROJECTION_DAMAGE = 145320,
-    SPELL_PROJECTION_BLUE = 145526,
-    SPELL_PROJECTION_WARNING = 146822,
-    SPELL_CHARMED_OVERCOME = 144863,
-    SPELL_OVERCOME_DAMAGE = 144843,
-    SPELL_MARK_OF_ARROGANCE = 144351,
-    SPELL_WOUNDED_PRIDE = 144358,
-    SPELL_MANIFESTATION_VISUAL = 144778,
-    SPELL_MOCKINGB_LAST = 144379,
-    SPELL_LAST_WORD = 144370,
-    SPELL_SPELL_REFLECTION_VISUAL_POOL = 144784,
-    SPELL_SPELL_REFLECTION_VISUAL_SQUIRT = 144788,
-    SPELL_CORRUPTED_PRISON_DOT = 144574,
-    SPELL_CORRUPTED_PRISON_EXPLOSION = 144615,
-    SPELL_REACHING_ATTACK = 144774,
-    SPELL_UNLEASHED_01 = 146173,
-    SPELL_UNLEASHED_02 = 146174,
-    SPELL_FINAL_GIFT = 144854,
+    SPELL_AURA_OF_PRIDE_AURA              = 146817,
+    SPELL_PRIDE_METER                     = 144343,
+    SPELL_GIFT_OF_TITAN                   = 144359,
+    SPELL_POWER_OF_THE_TITANS             = 144364,
+    SPELL_SWELLING_PRIDE                  = 144400,
+    SPELL_BANISHMENT                      = 145215,
+    SPELL_BURSTING_PRIDE                  = 144910,
+    SPELL_PROJECTION_PROJECTILE           = 145066,
+    SPELL_PROJECTION_DUMMY                = 144952,
+    SPELL_PROJECTION_DAMAGE               = 145320,
+    SPELL_PROJECTION_BLUE                 = 145526,
+    SPELL_PROJECTION_WARNING              = 146822,
+    SPELL_CHARMED_OVERCOME                = 144863,
+    SPELL_OVERCOME_DAMAGE                 = 144843,
+    SPELL_MARK_OF_ARROGANCE               = 144351,
+    SPELL_WOUNDED_PRIDE                   = 144358,
+    SPELL_MANIFESTATION_VISUAL            = 144778,
+    SPELL_MOCKINGB_LAST                   = 144379,
+    SPELL_LAST_WORD                       = 144370,
+    SPELL_SPELL_REFLECTION_VISUAL_POOL    = 144784,
+    SPELL_SPELL_REFLECTION_VISUAL_SQUIRT  = 144788,
+    SPELL_CORRUPTED_PRISON_DOT            = 144574,
+    SPELL_CORRUPTED_PRISON_EXPLOSION      = 144615,
+    SPELL_REACHING_ATTACK                 = 144774,
+    SPELL_UNLEASHED_01                    = 146173,
+    SPELL_UNLEASHED_02                    = 146174,
+    SPELL_FINAL_GIFT                      = 144854,
 
     /// Heroic
-    SPELL_SHA_OF_PRIDE_DAMAGE = 147183,
-    SPELL_SHA_OF_PRIDE_BOLT = 147391,
+    SPELL_SHA_OF_PRIDE_DAMAGE             = 147183,
+    SPELL_SHA_OF_PRIDE_BOLT               = 147391,
 
-    SPELL_BANISHMENT_DEBUFF = 145215,
-    SPELL_BANISHMENT_DOT_ENRAGE = 145684,
-    SPELL_BANISHMENT_RED_VISUAL = 148705,
+    SPELL_BANISHMENT_DEBUFF               = 145215,
+    SPELL_BANISHMENT_DOT_ENRAGE           = 145684,
+    SPELL_BANISHMENT_RED_VISUAL           = 148705,
 
-    SPELL_ORB_OF_LIGHT_VISUAL = 145299,
-    SPELL_ORB_OF_LIGHT_HEAL = 145345,
+    SPELL_ORB_OF_LIGHT_VISUAL             = 145299,
+    SPELL_ORB_OF_LIGHT_HEAL               = 145345,
 };
 
 enum Events
@@ -140,23 +157,23 @@ enum Events
 
 enum Actions
 {
-    ACTION_UNLEAHSED = 1,
-    ACTION_RELEASE = 2,
-    ACTION_SWITCH01 = 3,
-    ACTION_SWITCH02 = 4,
-    ACTION_SWITCH03 = 5,
-    ACTION_RESET = 6,
-    ACTION_COMBAT = 7,
-    ACTION_FINISH = 8,
+    ACTION_UNLEAHSED     = 1,
+    ACTION_RELEASE       = 2,
+    ACTION_SWITCH01      = 3,
+    ACTION_SWITCH02      = 4,
+    ACTION_SWITCH03      = 5,
+    ACTION_RESET         = 6,
+    ACTION_COMBAT        = 7,
+    ACTION_FINISH        = 8,
 };
 
 enum Creatures
 {
-    CREATURE_MANIFESTATION_OF_PRIDE = 71946,
-    CREATURE_PRISON_TRIGGER = 324245, // CUSTOM
-    CREATURE_REFLECTION = 72172,
-    CREATURE_PROJECTION = 432425,
-    CREATURE_ETHEREAL_CORRUPTION = 73972,
+    CREATURE_MANIFESTATION_OF_PRIDE  = 71946,
+    CREATURE_PRISON_TRIGGER          = 324245, // CUSTOM
+    CREATURE_REFLECTION              = 72172,
+    CREATURE_PROJECTION              = 432425,
+    CREATURE_ETHEREAL_CORRUPTION     = 73972,
 };
 
 enum Talks

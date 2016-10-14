@@ -4,13 +4,13 @@ Navicat MySQL Data Transfer
 Source Server         : JadeCore_5.x.x
 Source Server Version : 50624
 Source Host           : 127.0.0.1:3306
-Source Database       : auth
+Source Database       : auth547
 
 Target Server Type    : MYSQL
 Target Server Version : 50624
 File Encoding         : 65001
 
-Date: 2016-09-26 18:32:45
+Date: 2016-10-10 22:05:33
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -45,15 +45,9 @@ PRIMARY KEY (`id`)
 ENGINE=InnoDB
 DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
 COMMENT='Account System'
-AUTO_INCREMENT=1
+AUTO_INCREMENT=2
 
 ;
-
--- ----------------------------
--- Records of account
--- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for `account_access`
@@ -70,12 +64,6 @@ ENGINE=InnoDB
 DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
 
 ;
-
--- ----------------------------
--- Records of account_access
--- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for `account_banned`
@@ -97,12 +85,6 @@ COMMENT='Ban List'
 ;
 
 -- ----------------------------
--- Records of account_banned
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
 -- Table structure for `account_log_ip`
 -- ----------------------------
 DROP TABLE IF EXISTS `account_log_ip`;
@@ -116,13 +98,6 @@ ENGINE=MyISAM
 DEFAULT CHARACTER SET=latin1 COLLATE=latin1_swedish_ci
 
 ;
-
--- ----------------------------
--- Records of account_log_ip
--- ----------------------------
-BEGIN;
-INSERT INTO `account_log_ip` VALUES ('2', '127.0.0.1', '2014-11-03 00:58:29'), ('1', '127.0.0.1', '2014-11-03 01:10:28'), ('3', '127.0.0.1', '2014-11-20 01:07:10'), ('4', '127.0.0.1', '2015-01-22 05:22:02'), ('5', '127.0.0.1', '2015-01-22 05:23:20'), ('6', '127.0.0.1', '2015-06-13 10:52:56'), ('7', '25.12.37.204', '2016-04-17 19:37:40'), ('11', '127.0.0.1', '2016-07-17 19:09:50'), ('12', '127.0.0.1', '2016-07-22 18:13:35'), ('7', '127.0.0.1', '2016-07-22 18:14:44');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for `account_premium`
@@ -143,12 +118,6 @@ DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
 ;
 
 -- ----------------------------
--- Records of account_premium
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
 -- Table structure for `account_spell`
 -- ----------------------------
 DROP TABLE IF EXISTS `account_spell`;
@@ -165,13 +134,6 @@ DEFAULT CHARACTER SET=latin1 COLLATE=latin1_swedish_ci
 ;
 
 -- ----------------------------
--- Records of account_spell
--- ----------------------------
-BEGIN;
-INSERT INTO `account_spell` VALUES ('1', '472', '1', '0'), ('7', '10688', '1', '0'), ('7', '10709', '1', '0'), ('7', '10714', '1', '0'), ('7', '36027', '1', '0'), ('7', '123212', '1', '0'), ('7', '127816', '1', '0'), ('11', '64977', '1', '0');
-COMMIT;
-
--- ----------------------------
 -- Table structure for `firewall_farms`
 -- ----------------------------
 DROP TABLE IF EXISTS `firewall_farms`;
@@ -183,12 +145,6 @@ ENGINE=InnoDB
 DEFAULT CHARACTER SET=latin1 COLLATE=latin1_swedish_ci
 
 ;
-
--- ----------------------------
--- Records of firewall_farms
--- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for `ip_banned`
@@ -209,12 +165,6 @@ COMMENT='Banned IPs'
 ;
 
 -- ----------------------------
--- Records of ip_banned
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
 -- Table structure for `ip_to_country`
 -- ----------------------------
 DROP TABLE IF EXISTS `ip_to_country`;
@@ -232,12 +182,6 @@ DEFAULT CHARACTER SET=latin1 COLLATE=latin1_swedish_ci
 ;
 
 -- ----------------------------
--- Records of ip_to_country
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
 -- Table structure for `log_vote`
 -- ----------------------------
 DROP TABLE IF EXISTS `log_vote`;
@@ -251,12 +195,6 @@ ENGINE=InnoDB
 DEFAULT CHARACTER SET=latin1 COLLATE=latin1_swedish_ci
 
 ;
-
--- ----------------------------
--- Records of log_vote
--- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for `logs`
@@ -275,12 +213,6 @@ DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
 ;
 
 -- ----------------------------
--- Records of logs
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
 -- Table structure for `mails`
 -- ----------------------------
 DROP TABLE IF EXISTS `mails`;
@@ -291,12 +223,6 @@ ENGINE=InnoDB
 DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
 
 ;
-
--- ----------------------------
--- Records of mails
--- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for `realmcharacters`
@@ -313,13 +239,6 @@ DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
 COMMENT='Realm Character Tracker'
 
 ;
-
--- ----------------------------
--- Records of realmcharacters
--- ----------------------------
-BEGIN;
-INSERT INTO `realmcharacters` VALUES ('1', '1', '11'), ('1', '2', '11'), ('1', '3', '2'), ('1', '4', '1'), ('1', '5', '1'), ('1', '6', '1'), ('1', '7', '2'), ('1', '8', '0'), ('1', '9', '0'), ('1', '10', '0'), ('1', '11', '3'), ('1', '12', '1');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for `realmlist`
@@ -347,13 +266,6 @@ AUTO_INCREMENT=2
 ;
 
 -- ----------------------------
--- Records of realmlist
--- ----------------------------
-BEGIN;
-INSERT INTO `realmlist` VALUES ('1', 'JadeCore 5.x.x', '127.0.0.1', '8085', '0', '0', '1', '0', '0', '18019', '0');
-COMMIT;
-
--- ----------------------------
 -- Table structure for `transferts`
 -- ----------------------------
 DROP TABLE IF EXISTS `transferts`;
@@ -378,12 +290,6 @@ AUTO_INCREMENT=1
 ;
 
 -- ----------------------------
--- Records of transferts
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
 -- Table structure for `transferts_logs`
 -- ----------------------------
 DROP TABLE IF EXISTS `transferts_logs`;
@@ -399,12 +305,6 @@ ENGINE=InnoDB
 DEFAULT CHARACTER SET=latin1 COLLATE=latin1_swedish_ci
 
 ;
-
--- ----------------------------
--- Records of transferts_logs
--- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for `updates`
@@ -425,12 +325,6 @@ COMMENT='List of all applied updates in this database.'
 ;
 
 -- ----------------------------
--- Records of updates
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
 -- Table structure for `updates_include`
 -- ----------------------------
 DROP TABLE IF EXISTS `updates_include`;
@@ -444,13 +338,6 @@ DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
 COMMENT='List of directories where we want to include sql updates.'
 
 ;
-
--- ----------------------------
--- Records of updates_include
--- ----------------------------
-BEGIN;
-INSERT INTO `updates_include` VALUES ('$/sql/updates/auth/5.4.7', 'RELEASED'), ('$/sql/custom/auth', 'RELEASED');
-COMMIT;
 
 -- ----------------------------
 -- Table structure for `uptime`
@@ -471,12 +358,6 @@ COMMENT='Uptime system'
 ;
 
 -- ----------------------------
--- Records of uptime
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
 -- Indexes structure for table account
 -- ----------------------------
 CREATE UNIQUE INDEX `idx_username` ON `account`(`username`) USING BTREE ;
@@ -484,7 +365,7 @@ CREATE UNIQUE INDEX `idx_username` ON `account`(`username`) USING BTREE ;
 -- ----------------------------
 -- Auto increment value for `account`
 -- ----------------------------
-ALTER TABLE `account` AUTO_INCREMENT=1;
+ALTER TABLE `account` AUTO_INCREMENT=2;
 
 -- ----------------------------
 -- Indexes structure for table account_spell

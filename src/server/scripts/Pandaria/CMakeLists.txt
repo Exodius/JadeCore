@@ -1,4 +1,6 @@
-# Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+# Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
+# Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+# Copyright (C) 2011-2016 Project SkyFire <http://www.projectskyfire.org/>
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -61,7 +63,7 @@ set(scripts_STAT_SRCS
   Pandaria/MogushanVault/boss_elegon.cpp
   Pandaria/MogushanVault/boss_will_of_emperor.cpp
 
-Pandaria/HeartOfFear/heart_of_fear.cpp
+  Pandaria/HeartOfFear/heart_of_fear.cpp
   Pandaria/HeartOfFear/Imperial_Zorlok.cpp
   Pandaria/HeartOfFear/Blade_Lord_Tayak.cpp  
   Pandaria/HeartOfFear/Wind_Lord_Meljarak.cpp
@@ -111,8 +113,8 @@ Pandaria/HeartOfFear/heart_of_fear.cpp
   Pandaria/SiegeOfOrgrimmar/siege_of_orgrimmar.h
   Pandaria/SiegeOfOrgrimmar/siege_of_orgrimmar.cpp
   Pandaria/SiegeOfOrgrimmar/instance_siege_of_orgrimmar.cpp
+  Pandaria/SiegeOfOrgrimmar/boss_fallen_protectors.cpp
   Pandaria/SiegeOfOrgrimmar/boss_immersius.cpp
-  Pandaria/SiegeOfOrgrimmar/boss_fallen_protectors.cpp	
   Pandaria/SiegeOfOrgrimmar/boss_norushen.cpp
   Pandaria/SiegeOfOrgrimmar/boss_sha_of_pride.cpp
   Pandaria/SiegeOfOrgrimmar/boss_galakras.cpp

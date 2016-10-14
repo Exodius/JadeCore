@@ -21,7 +21,7 @@
 
 enum Spells
 {
-    SPELL_NET                                              = 6533
+    SPELL_NET = 6533
 };
 
 class boss_gelihast : public CreatureScript

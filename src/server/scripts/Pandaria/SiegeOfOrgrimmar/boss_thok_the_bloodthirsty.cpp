@@ -1,14 +1,32 @@
+/*
+* Copyright (C) 2008-2015 TrinityCore <http://www.trinitycore.org/>
+* Copyright (C) 2016-20XX JadeCore <https://www.jadecore.tk/>
+*
+* This program is free software; you can redistribute it and/or modify it
+* under the terms of the GNU General Public License as published by the
+* Free Software Foundation; either version 2 of the License, or (at your
+* option) any later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+* more details.
+*
+* You should have received a copy of the GNU General Public License along
+* with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "ScriptMgr.h"
 #include "ScriptedCreature.h"
 #include "siege_of_orgrimmar.h"
 
 enum eSpells
 {
-    SPELL_ACCELERATION	           = 143411,
-    SPELL_ACID_BREATH	           = 143780,
-    SPELL_BERSERK	               = 26662,
+    SPELL_ACCELERATION             = 143411,
+    SPELL_ACID_BREATH              = 143780,
+    SPELL_BERSERK                  = 26662,
     SPELL_BLOOD_FRENZY             = 143440, // Periodic aura. Triggers 143442 move speed increase + Taunt immunity.
-    SPELL_DEAFENING_SCREECH	       = 143343,
+    SPELL_DEAFENING_SCREECH        = 143343,
     SPELL_FEARSOME_ROAR            = 143426,
     SPELL_FIXATING                 = 146540, // Boss spell.
     SPELL_FIXATED                  = 143445, // Player aura.
@@ -39,22 +57,22 @@ class boss_thok_the_bloodthirsty : public CreatureScript
             {
                 pInstance = creature->GetInstanceScript();
             }
-			
+            
             EventMap events;
             InstanceScript* pInstance;
-			
+            
             void Reset()
             {
                 Reset();
-				
+                
                 events.Reset();
-				
+                
                 summons.DespawnAll();
-				
+                
                 if (pInstance)
                     pInstance->SendEncounterUnit(ENCOUNTER_FRAME_DISENGAGE, me);
             }
-			
+            
             void JustReachedHome()
             {
                 _JustReachedHome();
@@ -62,7 +80,7 @@ class boss_thok_the_bloodthirsty : public CreatureScript
                 if (pInstance)
                     pInstance->SetBossState(DATA_THOK_THE_BLOODTHIRSTY, FAIL);
             }
-			
+            
             void EnterCombat(Unit* attacker)
             {
                 // @TODO: Set in combat for other protectors
@@ -72,7 +90,7 @@ class boss_thok_the_bloodthirsty : public CreatureScript
                     pInstance->SetBossState(DATA_THOK_THE_BLOODTHIRSTY, IN_PROGRESS);
                 }
             }
-			
+            
             void JustSummoned(Creature* summon)
             {
                 summons.Summon(summon);
@@ -82,11 +100,11 @@ class boss_thok_the_bloodthirsty : public CreatureScript
             {
                 summons.Despawn(summon);
             }
-			
+            
             void KilledUnit(Unit* who)
             {
             }
-			
+            
             void JustDied(Unit* killer)
             {
                 _JustDied();
@@ -97,7 +115,7 @@ class boss_thok_the_bloodthirsty : public CreatureScript
                     pInstance->SetBossState(DATA_THOK_THE_BLOODTHIRSTY, DONE);
                 }
             }
-			
+            
             void UpdateAI(const uint32 diff)
             {
                 if (!UpdateVictim())
@@ -142,7 +160,7 @@ class mob_korkron_jailer : public CreatureScript
                 return;
             }
         };
-		
+        
         CreatureAI* GetAI(Creature* creature) const
         {
         return new mob_korkron_jailerAI(creature);
@@ -175,7 +193,7 @@ class mob_akolik : public CreatureScript
                     return;
             }
         };
-		
+        
         CreatureAI* GetAI(Creature* creature) const
         {
         return new mob_akolikAI(creature);
@@ -208,7 +226,7 @@ class mob_waterspeaker_gorai : public CreatureScript
                     return;
             }
         };
-		
+        
         CreatureAI* GetAI(Creature* creature) const
         {
         return new mob_waterspeaker_goraiAI(creature);
@@ -241,7 +259,7 @@ class mob_montak : public CreatureScript
                     return;
             }
         };
-		
+        
         CreatureAI* GetAI(Creature* creature) const
         {
             return new mob_montakAI(creature);

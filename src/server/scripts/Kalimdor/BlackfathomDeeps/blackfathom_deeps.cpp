@@ -39,7 +39,7 @@ class go_blackfathom_altar : public GameObjectScript
 public:
     go_blackfathom_altar() : GameObjectScript("go_blackfathom_altar") { }
 
-    bool OnGossipHello(Player* player, GameObject* /*go*/)
+bool OnGossipHello(Player* player, GameObject* /*go*/)
     {
         if (!player->HasAura(SPELL_BLESSING_OF_BLACKFATHOM))
             player->AddAura(SPELL_BLESSING_OF_BLACKFATHOM, player);
@@ -52,7 +52,7 @@ class go_blackfathom_fire : public GameObjectScript
 public:
     go_blackfathom_fire() : GameObjectScript("go_blackfathom_fire") { }
 
-    bool OnGossipHello(Player* /*player*/, GameObject* go)
+bool OnGossipHello(Player* /*player*/, GameObject* go)
     {
         InstanceScript* instance = go->GetInstanceScript();
 
