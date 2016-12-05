@@ -800,8 +800,7 @@ void WorldSession::HandlePetSpellAutocastOpcode(WorldPacket& recvPacket)
     TC_LOG_INFO("network", "CMSG_PET_SPELL_AUTOCAST");
     ObjectGuid PetGUID;
     uint32 SpellID;
-	uint8  state;                                           //1 for on, 0 for off
-    bool AutocastEnabled;
+    bool  state;                                           //1 for on, 0 for off
 
     recvPacket >> SpellID;
 
@@ -814,7 +813,7 @@ void WorldSession::HandlePetSpellAutocastOpcode(WorldPacket& recvPacket)
     PetGUID[3] = recvPacket.ReadBit();
     PetGUID[7] = recvPacket.ReadBit();
 
-    AutocastEnabled = recvPacket.ReadBit();
+    state = recvPacket.ReadBit();
 
     recvPacket.ReadByteSeq(PetGUID[5]);
     recvPacket.ReadByteSeq(PetGUID[0]);
