@@ -979,7 +979,7 @@ void BattlegroundDG::EventPlayerClickedOnFlag(Player* Source, GameObject* target
             m_NodeTimers[node] = BG_DG_FLAG_CAPTURING_TIME;
 
             // FIXME: need to fix Locales for team and node names.
-            if (teamIndex == 0)
+            if (teamIndex == TEAM_ALLIANCE)
                 SendMessage2ToAll(LANG_BG_DG_NODE_CLAIMED, CHAT_MSG_BG_SYSTEM_ALLIANCE, Source, _GetNodeNameId(node), LANG_BG_DG_ALLY);
             else
                 SendMessage2ToAll(LANG_BG_DG_NODE_CLAIMED, CHAT_MSG_BG_SYSTEM_HORDE, Source, _GetNodeNameId(node), LANG_BG_DG_HORDE);
@@ -1005,7 +1005,7 @@ void BattlegroundDG::EventPlayerClickedOnFlag(Player* Source, GameObject* target
                 m_NodeTimers[node] = BG_DG_FLAG_CAPTURING_TIME;
 
                 // FIXME: need to fix Locales for team and node names.
-                if (teamIndex == ALLIANCE)
+                if (teamIndex == TEAM_ALLIANCE)
                     SendMessage2ToAll(LANG_BG_DG_NODE_ASSAULTED, CHAT_MSG_BG_SYSTEM_ALLIANCE, Source, _GetNodeNameId(node));
                 else
                     SendMessage2ToAll(LANG_BG_DG_NODE_ASSAULTED, CHAT_MSG_BG_SYSTEM_HORDE, Source, _GetNodeNameId(node));
@@ -1024,15 +1024,15 @@ void BattlegroundDG::EventPlayerClickedOnFlag(Player* Source, GameObject* target
                 CreateBanner(node, BG_DG_NODE_TYPE_OCCUPIED, teamIndex, true);
                 SendNodeUpdate(node);
                 m_NodeTimers[node] = 0;
-                NodeOccupied(node, (teamIndex == ALLIANCE) ? ALLIANCE : HORDE);
+                NodeOccupied(node, (teamIndex == TEAM_ALLIANCE) ? ALLIANCE : HORDE);
 
                 // FIXME: need to fix Locales for team and node names.
-                if (teamIndex == ALLIANCE)
+                if (teamIndex == TEAM_ALLIANCE)
                     SendMessage2ToAll(LANG_BG_DG_NODE_DEFENDED, CHAT_MSG_BG_SYSTEM_ALLIANCE, Source, _GetNodeNameId(node));
                 else
                     SendMessage2ToAll(LANG_BG_DG_NODE_DEFENDED, CHAT_MSG_BG_SYSTEM_HORDE, Source, _GetNodeNameId(node));
             }
-            sound = (teamIndex == ALLIANCE) ? BG_DG_SOUND_NODE_ASSAULTED_ALLIANCE : BG_DG_SOUND_NODE_ASSAULTED_HORDE;
+            sound = (teamIndex == TEAM_ALLIANCE) ? BG_DG_SOUND_NODE_ASSAULTED_ALLIANCE : BG_DG_SOUND_NODE_ASSAULTED_HORDE;
         }
         // If node is occupied, change to enemy-contested
         else
@@ -1051,19 +1051,19 @@ void BattlegroundDG::EventPlayerClickedOnFlag(Player* Source, GameObject* target
             m_NodeTimers[node] = BG_DG_FLAG_CAPTURING_TIME;
 
             // FIXME: need to fix Locales for team and node names.
-            if (teamIndex == ALLIANCE)
+            if (teamIndex == TEAM_ALLIANCE)
                 SendMessage2ToAll(LANG_BG_DG_NODE_ASSAULTED, CHAT_MSG_BG_SYSTEM_ALLIANCE, Source, _GetNodeNameId(node));
             else
                 SendMessage2ToAll(LANG_BG_DG_NODE_ASSAULTED, CHAT_MSG_BG_SYSTEM_HORDE, Source, _GetNodeNameId(node));
 
-            sound = (teamIndex == ALLIANCE) ? BG_DG_SOUND_NODE_ASSAULTED_ALLIANCE : BG_DG_SOUND_NODE_ASSAULTED_HORDE;
+            sound = (teamIndex == TEAM_ALLIANCE) ? BG_DG_SOUND_NODE_ASSAULTED_ALLIANCE : BG_DG_SOUND_NODE_ASSAULTED_HORDE;
         }
 
         // If node is occupied again, send "X has taken the Y" msg.
         if (m_Nodes[node] >= BG_DG_NODE_TYPE_OCCUPIED)
         {
             // FIXME: need to fix Locales for team and node names.
-            if (teamIndex == ALLIANCE)
+            if (teamIndex == TEAM_ALLIANCE)
                 SendMessage2ToAll(LANG_BG_DG_NODE_TAKEN, CHAT_MSG_BG_SYSTEM_ALLIANCE, NULL, LANG_BG_DG_ALLY, _GetNodeNameId(node));
             else
                 SendMessage2ToAll(LANG_BG_DG_NODE_TAKEN, CHAT_MSG_BG_SYSTEM_HORDE, NULL, LANG_BG_DG_HORDE, _GetNodeNameId(node));
