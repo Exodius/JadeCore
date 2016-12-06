@@ -216,7 +216,12 @@ enum ScoreType
     SCORE_MMR_CHANGE                = 23,
     //TK
     SCORE_ORB_HANDLES               = 21,
-    SCORE_ORB_SCORE                 = 22
+    SCORE_ORB_SCORE                 = 22,
+    // SM
+    SCORE_CARTS_HELPED              = 23,
+    // DG
+    SCORE_MINES_ASSAULTED           = 24,
+    SCORE_MINES_DEFENDED            = 25
 };
 
 enum BattlegroundType
@@ -432,7 +437,7 @@ class Battleground
 
         // Packet Transfer
         // method that should fill worldpacket with actual world states (not yet implemented for all battlegrounds!)
-        virtual void FillInitialWorldStates(WorldStateBuilder& /*builder*/) { }
+        void FillInitialWorldStates(WorldStateBuilder& /*builder*/) { }
         void SendPacketToTeam(uint32 TeamID, WorldPacket* packet, Player* sender = NULL, bool self = true);
         void SendPacketToAll(WorldPacket* packet);
         void YellToAll(Creature* creature, const char* text, uint32 language);
