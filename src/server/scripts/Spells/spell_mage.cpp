@@ -1045,7 +1045,7 @@ class spell_mage_combustion : public SpellScriptLoader
                             if (!(*i)->GetAmplitude())
                                 continue;
 
-                            combustionBp += _player->SpellDamageBonusDone(target, (*i)->GetSpellInfo(), (*i)->GetAmount(), DOT, NULL) * 1000 / (*i)->GetAmplitude();
+                            combustionBp += _player->SpellDamageBonusDone(target, (*i)->GetSpellInfo(), (*i)->GetAmount(), DOT) * 1000 / (*i)->GetAmplitude();
                         }
 
                         if (combustionBp)
@@ -1156,7 +1156,7 @@ class spell_mage_inferno_blast : public SpellScriptLoader
                                 if (itr->HasAura(SPELL_MAGE_PYROBLAST, _player->GetGUID()))
                                 {
                                     combustionBp += _player->CalculateSpellDamage(target, sSpellMgr->GetSpellInfo(SPELL_MAGE_PYROBLAST), 1);
-									combustionBp = _player->SpellDamageBonusDone(target, sSpellMgr->GetSpellInfo(SPELL_MAGE_PYROBLAST), combustionBp, DOT, NULL);
+									combustionBp = _player->SpellDamageBonusDone(target, sSpellMgr->GetSpellInfo(SPELL_MAGE_PYROBLAST), combustionBp, DOT);
                                 }
                                 if (itr->HasAura(SPELL_MAGE_IGNITE, _player->GetGUID()))
                                     combustionBp += itr->GetRemainingPeriodicAmount(_player->GetGUID(), SPELL_MAGE_IGNITE, SPELL_AURA_PERIODIC_DAMAGE);
