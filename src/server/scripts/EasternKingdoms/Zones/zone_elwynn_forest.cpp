@@ -264,7 +264,7 @@ public:
                             break;
                         }
                         me->HandleEmoteCommand(EMOTE_ONESHOT_CHEER);
-                        owner->KilledMonsterCredit(me->GetEntry(), NULL);
+                        owner->KilledMonsterCredit(me->GetEntry(), 0);
                         events.ScheduleEvent(EVENT_HEALED_2, 2500);
                     }
                     break;
@@ -573,7 +573,7 @@ public:
                             me->VisitNearbyWorldObject(35.0f, searcher);
 
                             for (std::list<Player*>::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-                                (*itr)->KilledMonsterCredit(448, NULL);
+                                (*itr)->KilledMonsterCredit(448, 0);
 
                             phase = 0;
                         } break;

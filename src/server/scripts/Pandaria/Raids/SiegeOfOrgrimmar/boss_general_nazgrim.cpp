@@ -150,7 +150,7 @@ Position pos[3] =
 
 void AddRage(Creature* me,uint32 p_BaseValue, uint64 nazgrimGuid)
 {
-    if (nazgrimGuid == NULL)
+    if (nazgrimGuid == 0)
         return;
 
     if (Creature* generalNazgrim = sObjectAccessor->GetCreature(*me, nazgrimGuid))
@@ -163,7 +163,7 @@ void AddRage(Creature* me,uint32 p_BaseValue, uint64 nazgrimGuid)
 
 void RemoveRage(Creature* me, uint32 p_BaseValue, uint64 nazgrimGuid)
 {
-    if (nazgrimGuid == NULL)
+    if (nazgrimGuid == 0)
         return;
 
     if (Creature* generalNazgrim = sObjectAccessor->GetCreature(*me, nazgrimGuid))
