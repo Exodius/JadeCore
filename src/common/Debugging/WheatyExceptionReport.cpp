@@ -10,6 +10,7 @@
 #pragma warning(disable:4996)
 #pragma warning(disable:4312)
 #pragma warning(disable:4311)
+#pragma warning(disable:4091)
 #include <windows.h>
 #include <tlhelp32.h>
 #include <stdio.h>

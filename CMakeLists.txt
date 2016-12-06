@@ -17,7 +17,10 @@
 project(JadeCore)
 
 # Fix compile
-SET(CMAKE_C_FLAGS "-std=gnu99" CACHE STRING "" FORCE)
+  if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    set (CMAKE_C_FLAGS "-std=gnu99 ${CMAKE_C_FLAGS}")
+  endif ()
+
 
 # CMake policies (can not be handled elsewhere)
 cmake_minimum_required(VERSION 2.8.9)
