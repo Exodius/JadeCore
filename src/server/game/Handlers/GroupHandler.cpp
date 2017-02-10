@@ -1,10 +1,9 @@
 /*
- * Copyright (C) 2008-2015 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2014 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 3 of the License, or (at your
+ * Free Software Foundation; either version 2 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -1192,7 +1191,7 @@ void WorldSession::HandleRequestPartyMemberStatsOpcode(WorldPacket& recvData)
     TC_LOG_DEBUG("network", "WORLD: Received CMSG_REQUEST_PARTY_MEMBER_STATS");
     ObjectGuid guid;
 
-    recvData.ReadBit(); // unk bit
+    recvData.read_skip<uint8>(); // flags
 
     guid[7] = recvData.ReadBit();
     guid[4] = recvData.ReadBit();
@@ -1408,6 +1407,48 @@ void WorldSession::HandleOptOutOfLootOpcode(WorldPacket& recvData)
     }
 
     GetPlayer()->SetPassOnGroupLoot(passOnLoot);
+}
+
+void WorldSession::HandleGroupInitiatePollRole(WorldPacket& recvData)
+{
+    TC_LOG_DEBUG("network", "WORLD: Received CMSG_GROUP_INITIATE_ROLE_POLL");
+
+    uint8 Index = 0;
+    recvData >> Index;
+
+    Group* group = GetPlayer()->GetGroup();
+    if (!group)
+	return;
+
+    SendRolePollInform(Index);
+}
+
+void WorldSession::SendRolePollInform(uint8 Index)
+{
+    ObjectGuid guid = GetPlayer()->GetGUID();
+
+    WorldPacket data(SMSG_GROUP_ROLE_POLL_INFORM, 8 + 1);
+
+    data.WriteBit(guid[5]);
+    data.WriteBit(guid[7]);
+    data.WriteBit(guid[3]);
+    data.WriteBit(guid[1]);
+    data.WriteBit(guid[2]);
+    data.WriteBit(guid[0]);
+    data.WriteBit(guid[4]);
+    data.WriteBit(guid[6]);
+
+    data.WriteByteSeq(guid[7]);
+    data << uint8(Index);
+    data.WriteByteSeq(guid[6]);
+    data.WriteByteSeq(guid[5]);
+    data.WriteByteSeq(guid[0]);
+    data.WriteByteSeq(guid[1]);
+    data.WriteByteSeq(guid[4]);
+    data.WriteByteSeq(guid[2]);
+    data.WriteByteSeq(guid[3]);
+
+    GetPlayer()->GetGroup()->BroadcastPacket(&data, false, -1);
 }
 
 void WorldSession::HandleClearWorldMarkerOpcode(WorldPacket& recv_data)

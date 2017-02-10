@@ -1,6 +1,4 @@
 # Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
-# Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
-# Copyright (C) 2011-2016 Project SkyFire <http://www.projectskyfire.org/>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -15,21 +13,11 @@
 # You should have received a copy of the GNU General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-# Platform-specfic options
-option(USE_MYSQL_SOURCES "Use included MySQL-sources to build libraries" 1)
-
 # Package overloads
 set(ACE_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/dep/acelite)
 set(ACE_LIBRARY "ace")
 set(BZIP2_LIBRARIES "bzip2")
 set(ZLIB_LIBRARIES "zlib")
-
-if( USE_MYSQL_SOURCES )
-  set(MYSQL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/dep/mysqllite/include)
-  set(MYSQL_LIBRARY "libmysql")
-  set( MYSQL_FOUND 1 )
-  message(STATUS "Using supplied MySQL sources")
-endif()
 
 # check the CMake preload parameters (commented out by default)
 

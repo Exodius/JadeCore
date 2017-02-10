@@ -1,6 +1,4 @@
 # Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
-# Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
-# Copyright (C) 2011-2016 Project SkyFire <http://www.projectskyfire.org/>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -52,6 +50,7 @@ file(GLOB_RECURSE sources_Quests Quests/*.cpp Quests/*.h)
 file(GLOB_RECURSE sources_Reputation Reputation/*.cpp Reputation/*.h)
 file(GLOB_RECURSE sources_Scripting Scripting/*.cpp Scripting/*.h)
 file(GLOB_RECURSE sources_Server Server/*.cpp Server/*.h)
+file(GLOB_RECURSE sources_SharedPtrs SharedPtrs/*.cpp SharedPtrs/*.h)
 file(GLOB_RECURSE sources_Skills Skills/*.cpp Skills/*.h)
 file(GLOB_RECURSE sources_Spells Spells/*.cpp Spells/*.h)
 file(GLOB_RECURSE sources_Texts Texts/*.cpp Texts/*.h)
@@ -60,54 +59,6 @@ file(GLOB_RECURSE sources_Tickets Tickets/*.cpp Tickets/*.h)
 file(GLOB_RECURSE sources_Warden Warden/*.cpp Warden/*.h)
 file(GLOB_RECURSE sources_Weather Weather/*.cpp Weather/*.h)
 file(GLOB_RECURSE sources_World World/*.cpp World/*.h)
-
-source_group(CMake FILES CMakeLists.txt)
-source_group(Accounts FILES ${sources_Accounts})
-source_group(Achievements FILES ${sources_Achievements})
-source_group(Addons FILES ${sources_Addons})
-source_group(AI FILES ${sources_AI})
-source_group(AuctionHouse FILES ${sources_AuctionHouse})
-source_group(Battlefield FILES ${sources_Battlefield})
-source_group(Battlegrounds FILES ${sources_Battlegrounds})
-source_group(BattlePet FILES ${sources_BattlePet})
-source_group(BattleShop FILES ${sources_BattleShop})
-source_group(BlackMarket FILES ${sources_BlackMarket})
-source_group(Calendar FILES ${sources_Calendar})
-source_group(Chat FILES ${sources_Chat})
-source_group(Combat FILES ${sources_Combat})
-source_group(Conditions FILES ${sources_Conditions})
-source_group(DataStores FILES ${sources_DataStores})
-source_group(DungeonFinding FILES ${sources_DungeonFinding})
-source_group(Entities FILES ${sources_Entities})
-source_group(Events FILES ${sources_Events})
-source_group(Globals FILES ${sources_Globals})
-source_group(Grids FILES ${sources_Grids})
-source_group(Groups FILES ${sources_Groups})
-source_group(Guilds FILES ${sources_Guilds})
-source_group(Handlers FILES ${sources_Handlers})
-source_group(Instances FILES ${sources_Instances})
-source_group(Loot FILES ${sources_Loot})
-source_group(Mails FILES ${sources_Mails})
-source_group(Maps FILES ${sources_Maps})
-source_group(Miscellaneous FILES ${sources_Miscellaneous})
-source_group(Movement FILES ${sources_Movement})
-source_group(OutdoorPvP FILES ${sources_OutdoorPvP})
-source_group(OnlineShop FILES ${sources_OnlineShop})
-source_group(Pools FILES ${sources_Pools})
-source_group(PrecompiledHeaders FILES ${sources_PrecompiledHeaders})
-source_group(Quests FILES ${sources_Quests})
-source_group(Reputation FILES ${sources_Reputation})
-source_group(Scripting FILES ${sources_Scripting})
-source_group(Server FILES ${sources_Server})
-source_group(Skills FILES ${sources_Skills})
-source_group(Spells FILES ${sources_Spells})
-source_group(Texts FILES ${sources_Texts})
-source_group(Tools FILES ${sources_Tools})
-source_group(Tickets FILES ${sources_Tickets})
-source_group(Warden FILES ${sources_Warden})
-source_group(Weather FILES ${sources_Weather})
-source_group(World FILES ${sources_World})
-# Create game-libary
 
 if (USE_COREPCH)
   set(game_STAT_PCH_HDR PrecompiledHeaders/gamePCH.h)
@@ -169,23 +120,26 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/dep/g3dlite/include
   ${CMAKE_SOURCE_DIR}/dep/SFMT
   ${CMAKE_SOURCE_DIR}/dep/zlib
-  ${CMAKE_SOURCE_DIR}/src/server/collision
-  ${CMAKE_SOURCE_DIR}/src/server/collision/Management
-  ${CMAKE_SOURCE_DIR}/src/server/collision/Models
-  ${CMAKE_SOURCE_DIR}/src/server/collision/Maps
+  ${CMAKE_SOURCE_DIR}/src/common
+  ${CMAKE_SOURCE_DIR}/src/common/Collision
+  ${CMAKE_SOURCE_DIR}/src/common/Collision/Management
+  ${CMAKE_SOURCE_DIR}/src/common/Collision/Models
+  ${CMAKE_SOURCE_DIR}/src/common/Collision/Maps
+  ${CMAKE_SOURCE_DIR}/src/common/Debugging
+  ${CMAKE_SOURCE_DIR}/src/common/Utilities
+  ${CMAKE_SOURCE_DIR}/src/common/Threading
+  ${CMAKE_SOURCE_DIR}/src/common/Configuration
+  ${CMAKE_SOURCE_DIR}/src/common/Logging
+  ${CMAKE_SOURCE_DIR}/src/server/database
+  ${CMAKE_SOURCE_DIR}/src/server/database/Database
+  ${CMAKE_SOURCE_DIR}/src/server/database/Logging
   ${CMAKE_SOURCE_DIR}/src/server/shared
-  ${CMAKE_SOURCE_DIR}/src/server/shared/Configuration
   ${CMAKE_SOURCE_DIR}/src/server/shared/Cryptography
   ${CMAKE_SOURCE_DIR}/src/server/shared/Cryptography/Authentication
-  ${CMAKE_SOURCE_DIR}/src/server/shared/Database
   ${CMAKE_SOURCE_DIR}/src/server/shared/DataStores
-  ${CMAKE_SOURCE_DIR}/src/server/shared/Debugging
   ${CMAKE_SOURCE_DIR}/src/server/shared/Dynamic/LinkedReference
   ${CMAKE_SOURCE_DIR}/src/server/shared/Dynamic
-  ${CMAKE_SOURCE_DIR}/src/server/shared/Logging
   ${CMAKE_SOURCE_DIR}/src/server/shared/Packets
-  ${CMAKE_SOURCE_DIR}/src/server/shared/Threading
-  ${CMAKE_SOURCE_DIR}/src/server/shared/Utilities
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/Accounts
   ${CMAKE_CURRENT_SOURCE_DIR}/Achievements
@@ -267,12 +221,12 @@ include_directories(
   ${OPENSSL_INCLUDE_DIR}
 )
 
+GroupSources(${CMAKE_CURRENT_SOURCE_DIR})
+
 add_library(game STATIC
   ${game_STAT_SRCS}
   ${game_STAT_PCH_SRC}
 )
-
-add_dependencies(game revision.h)
 
 # Generate precompiled header
 if (USE_COREPCH)

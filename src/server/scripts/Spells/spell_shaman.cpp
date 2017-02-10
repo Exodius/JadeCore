@@ -1,7 +1,5 @@
 /*
  * Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2011-2016 Project SkyFire <http://www.projectskyfire.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -953,6 +951,7 @@ class spell_sha_fire_nova : public SpellScriptLoader
                     }
                 }
             }
+
             SpellCastResult HandleCheckCast()
             {
                 UnitList targets;
@@ -1224,7 +1223,7 @@ class spell_sha_fulmination : public SpellScriptLoader
                             return;
 
                         int32 basePoints = _player->CalculateSpellDamage(target, spellInfo, 0);
-						uint32 damage = usedCharges * _player->SpellDamageBonusDone(target, spellInfo, basePoints, SPELL_DIRECT_DAMAGE, NULL);
+						uint32 damage = usedCharges * _player->SpellDamageBonusDone(target, spellInfo, basePoints, SPELL_DIRECT_DAMAGE);
 
                         _player->CastCustomSpell(SPELL_SHA_FULMINATION_TRIGGERED, SPELLVALUE_BASE_POINT0, damage, target, true, NULL, fulminationAura);
                         lightningShield->SetCharges(lsCharges - usedCharges);

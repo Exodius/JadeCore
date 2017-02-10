@@ -1,6 +1,4 @@
 # Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
-# Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
-# Copyright (C) 2011-2016 Project SkyFire <http://www.projectskyfire.org/>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -22,4 +20,7 @@ option(USE_SCRIPTPCH    "Use precompiled headers when compiling scripts"        
 option(USE_COREPCH      "Use precompiled headers when compiling servers"              1)
 option(WITH_WARNINGS    "Show all warnings during compile"                            0)
 option(WITH_COREDEBUG   "Include additional debug-code in core"                       0)
+option(WITHOUT_GIT      "Disable the GIT testing routines"                            0)
 option(WITH_MESHEXTRACTOR "Build meshextractor (alpha)"                               0)
+set(WITH_SOURCE_TREE    "hierarchical" CACHE STRING "Build the source tree for IDE's.")
+set_property(CACHE WITH_SOURCE_TREE PROPERTY STRINGS no flat hierarchical hierarchical-folders)

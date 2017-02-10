@@ -1,6 +1,4 @@
 # Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
-# Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
-# Copyright (C) 2011-2016 Project SkyFire <http://www.projectskyfire.org/>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -29,9 +27,6 @@ endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
   add_subdirectory(acelite)
-  if(USE_MYSQL_SOURCES)
-      add_subdirectory(mysqllite)
-  endif()
   if(TOOLS)
     add_subdirectory(bzip2)
   endif()

@@ -1,10 +1,9 @@
 /*
- * Copyright (C) 2008-2015 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2014 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 3 of the License, or (at your
+ * Free Software Foundation; either version 2 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -3696,7 +3695,7 @@ void SpellMgr::LoadSpellInfoCustomAttributes()
                     break;
                 case 117895:// Eminence (statue)
                     spellInfo->Effects[0].TargetA = TARGET_UNIT_TARGET_ALLY;
-                    spellInfo->Effects[0].TargetB = NULL;
+                    spellInfo->Effects[0].TargetB = 0;
                     break;
                 case 115294:// Mana Tea
                     spellInfo->DurationEntry = sSpellDurationStore.LookupEntry(36); // 1s

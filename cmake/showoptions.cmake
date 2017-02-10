@@ -1,6 +1,4 @@
 # Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
-# Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
-# Copyright (C) 2011-2016 Project SkyFire <http://www.projectskyfire.org/>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -77,6 +75,12 @@ if( WITH_COREDEBUG )
   add_definitions(-DTRINITY_DEBUG)
 else()
   message("* Use coreside debug     : No  (default)")
+endif()
+
+if( NOT WITH_SOURCE_TREE STREQUAL "no" )
+  message("* Show source tree       : Yes (${WITH_SOURCE_TREE})")
+else()
+  message("* Show source tree       : No")
 endif()
 
 if( WIN32 )

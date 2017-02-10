@@ -2,12 +2,12 @@
 
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/JadeCore/JadeCore.svg)](http://isitmaintained.com/project/JadeCore/JadeCore "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/JadeCore/JadeCore.svg)](http://isitmaintained.com/project/JadeCore/JadeCore "Percentage of issues still open")
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/10344/badge.svg)]("https://scan.coverity.com/projects/jadecore)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/10616/badge.svg)]("https://scan.coverity.com/projects/jadecore-jadecore)
 
-5.4.7 | 5.4.8 
+5.4.8 | 4.3.4 
 :------------: | :------------:
-[![5.4.7 Build Status](https://travis-ci.org/JadeCore/JadeCore.svg?branch=5.4.7)](https://travis-ci.org/JadeCore/JadeCore/builds) | [![5.4.8 Build Status](https://travis-ci.org/JadeCore/JadeCore.svg?branch=5.4.8)](https://travis-ci.org/JadeCore/JadeCore/builds) 
-
+[![5.4.8 Build Status](https://travis-ci.org/JadeCore/JadeCore.svg?branch=5.4.8)](https://travis-ci.org/JadeCore/JadeCore/builds) |[![4.3.4 Build Status](https://travis-ci.org/JadeCore/JadeCore.svg?branch=4.3.4)](https://travis-ci.org/JadeCore/JadeCore/builds)
+[![5.4.8 Build status](https://ci.appveyor.com/api/projects/status/jrv4u77aw5qtjuu5/branch/5.4.8?svg=true)](https://ci.appveyor.com/project/Bodeguero/jadecore/branch/5.4.8) | [![4.3.4 Build status](https://ci.appveyor.com/api/projects/status/jrv4u77aw5qtjuu5/branch/4.3.4?svg=true)](https://ci.appveyor.com/project/Bodeguero/jadecore/branch/4.3.4)
 
 ## Introduction
 
@@ -29,7 +29,7 @@ For more information about the project, visit our website at project [JadeCore O
 + CMake = 2.8.0 
 + OpenSSL = 1.0.0 
 + GCC = 4.7.2 (Linux only) 
-+ MS Visual Studio = 12 (2013)(Windows only)
++ MS Visual Studio = 14 (2015)(Windows only)
 
 
 ## Reporting issues
@@ -61,7 +61,7 @@ Read file [COPYING](COPYING)
 
 This project is brought to you thanks to:
 
-![ach_oc0xo42y](https://cloud.githubusercontent.com/assets/812439/19197100/ce6f70d0-8cc0-11e6-9ceb-b0340244cbd7.jpg)
+![ach_gtpkuqsv](https://cloud.githubusercontent.com/assets/812439/19532995/a1ceed0a-9646-11e6-9b76-e83e15e9493c.jpg)
 
 - [JadeCore developers and contributors](https://github.com/JadeEmu/JadeCore/graphs/contributors)
 - [TrinityCore developers and contributors](https://github.com/TrinityCore/TrinityCore/blob/3.3.5/THANKS)

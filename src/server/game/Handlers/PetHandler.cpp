@@ -1,10 +1,9 @@
 /*
- * Copyright (C) 2008-2015 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2014 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 3 of the License, or (at your
+ * Free Software Foundation; either version 2 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -801,8 +800,7 @@ void WorldSession::HandlePetSpellAutocastOpcode(WorldPacket& recvPacket)
     TC_LOG_INFO("network", "CMSG_PET_SPELL_AUTOCAST");
     ObjectGuid PetGUID;
     uint32 SpellID;
-	uint8  state;                                           //1 for on, 0 for off
-    bool AutocastEnabled;
+    bool  state;                                           //1 for on, 0 for off
 
     recvPacket >> SpellID;
 
@@ -815,7 +813,7 @@ void WorldSession::HandlePetSpellAutocastOpcode(WorldPacket& recvPacket)
     PetGUID[3] = recvPacket.ReadBit();
     PetGUID[7] = recvPacket.ReadBit();
 
-    AutocastEnabled = recvPacket.ReadBit();
+    state = recvPacket.ReadBit();
 
     recvPacket.ReadByteSeq(PetGUID[5]);
     recvPacket.ReadByteSeq(PetGUID[0]);

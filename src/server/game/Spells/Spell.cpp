@@ -1,10 +1,9 @@
 /*
- * Copyright (C) 2008-2015 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2014 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 3 of the License, or (at your
+ * Free Software Foundation; either version 2 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -3781,9 +3780,9 @@ void Spell::SendSpellCooldown()
 
     // Heroic Strike and Cleave share cooldowns, prevent cheat by using macro for bypass cooldown
     if (m_spellInfo->Id == 78)
-        _player->AddSpellAndCategoryCooldowns(sSpellMgr->GetSpellInfo(845), NULL, this);
+        _player->AddSpellAndCategoryCooldowns(sSpellMgr->GetSpellInfo(845), 0, this);
     else if (m_spellInfo->Id == 845)
-        _player->AddSpellAndCategoryCooldowns(sSpellMgr->GetSpellInfo(78), NULL, this);
+        _player->AddSpellAndCategoryCooldowns(sSpellMgr->GetSpellInfo(78), 0, this);
 
     _player->AddSpellAndCategoryCooldowns(m_spellInfo, m_CastItem ? m_CastItem->GetEntry() : 0, this);
 }
@@ -4879,13 +4878,14 @@ void Spell::SendChannelUpdate(uint32 time)
         m_caster->SetUInt32Value(UNIT_FIELD_CHANNEL_SPELL, 0);
     }
 
-    WorldPacket data(SMSG_CHANNEL_UPDATE, 8 + 4);
-    ObjectGuid guid = m_caster->GetGUID();
-    data.WriteGuidMask(guid, 0, 3, 4, 1, 5, 2, 6, 7);
+    ObjectGuid CasterGUID = m_caster->GetGUID();
+
+    WorldPacket data(SMSG_SPELL_CHANNEL_UPDATE, 8 + 4);
+    data.WriteGuidMask(CasterGUID, 0, 3, 4, 1, 5, 2, 6, 7);
     
-    data.WriteGuidBytes(guid, 4, 7, 1, 2, 6, 5);
+    data.WriteGuidBytes(CasterGUID, 4, 7, 1, 2, 6, 5);
     data << uint32(time);
-    data.WriteGuidBytes(guid, 0, 3);
+    data.WriteGuidBytes(CasterGUID, 0, 3);
 
     m_caster->SendMessageToSet(&data, true);
 }
@@ -4897,10 +4897,13 @@ void Spell::SendChannelStart(uint32 duration)
         if (m_UniqueTargetInfo.size() + m_UniqueGOTargetInfo.size() == 1)   // this is for TARGET_SELECT_CATEGORY_NEARBY
             channelTarget = !m_UniqueTargetInfo.empty() ? m_UniqueTargetInfo.front().targetGUID : m_UniqueGOTargetInfo.front().targetGUID;
 
-    WorldPacket data(SMSG_CHANNEL_START, (8+4+4));
-    ObjectGuid guid = m_caster->GetGUID();
+    uint32 SchoolImmunityMask = m_caster->GetSchoolImmunityMask();
+    uint32 MechanicImmunityMask = m_caster->GetMechanicImmunityMask();
+    ObjectGuid CasterGUID = m_caster->GetGUID();
+
+    WorldPacket data(SMSG_SPELL_CHANNEL_START, (8 + 4 + 4/*+8+4+1+8*/));
     
-    data.WriteGuidMask(guid, 7, 5, 4, 1);
+    data.WriteGuidMask(CasterGUID, 7, 5, 4, 1);
     
     data.WriteBit(0); // healPrediction
     
@@ -4920,9 +4923,12 @@ void Spell::SendChannelStart(uint32 duration)
     }
     */
 
-    data.WriteGuidMask(guid, 3, 2, 0, 6);
+    data.WriteGuidMask(CasterGUID, 3, 2, 0, 6);
     
-    data.WriteBit(0); // immunity
+    if (SchoolImmunityMask || MechanicImmunityMask)
+        data.WriteBit(1);
+    else
+        data.WriteBit(0);
    
     /*
     if (healPrediction)
@@ -4949,17 +4955,16 @@ void Spell::SendChannelStart(uint32 duration)
         packet.WriteGuid("Guid2", guid2);
     }
     */
-    /*
-    if (immunity)
+ 
+    if (SchoolImmunityMask || MechanicImmunityMask)
     {
-        data << uint32(); // CastSchoolImmunities
-        data << uint32(); // CastImmunities
+        data << uint32(SchoolImmunityMask);                       // SchoolImmunityMask
+        data << uint32(MechanicImmunityMask);                     // MechanicImmunityMask
     }
-    */
     
-    data.WriteGuidBytes(guid, 6, 7, 3, 1, 0);
+    data.WriteGuidBytes(CasterGUID, 6, 7, 3, 1, 0);
     data << uint32(duration);
-    data.WriteGuidBytes(guid, 5, 4, 2);
+    data.WriteGuidBytes(CasterGUID, 5, 4, 2);
     data << uint32(m_spellInfo->Id);
 
     m_caster->SendMessageToSet(&data, true);
@@ -4996,6 +5001,7 @@ void Spell::SendResurrectRequest(Player* target)
     data.WriteBit(Guid[0]);
     data.WriteBit(Guid[4]);
     data.WriteBit(Guid[7]);
+    data.WriteBits(sentName.size(), 6);
 
     data.WriteByteSeq(Guid[7]);
     data.WriteByteSeq(Guid[3]);
@@ -5636,6 +5642,8 @@ SpellCastResult Spell::CheckCast(bool strict)
     // not for triggered spells (needed by execute)
     if (!(_triggeredCastFlags & TRIGGERED_IGNORE_CASTER_AURASTATE))
     {
+		if (m_spellInfo->Id == 100130 && m_caster->ToPlayer()->GetWeaponForAttack(OFF_ATTACK, true))
+			return SPELL_CAST_OK; // Wild Strike...
         if (m_spellInfo->CasterAuraState && !m_caster->HasAuraState(AuraStateType(m_spellInfo->CasterAuraState), m_spellInfo, m_caster))
             return SPELL_FAILED_CASTER_AURASTATE;
         if (m_spellInfo->CasterAuraStateNot && m_caster->HasAuraState(AuraStateType(m_spellInfo->CasterAuraStateNot), m_spellInfo, m_caster))
@@ -6564,19 +6572,13 @@ SpellCastResult Spell::CheckCasterAuras() const
                                 break;
                             case SPELL_AURA_MOD_FEAR:
                             case SPELL_AURA_MOD_FEAR_2:
-                                if (!(m_spellInfo->AttributesEx5 & SPELL_ATTR5_USABLE_WHILE_FEARED) || m_spellInfo->Id != 8143 || m_spellInfo->Id != 7744 || m_spellInfo->Id != 18499)
+                                if (!(m_spellInfo->AttributesEx5 & SPELL_ATTR5_USABLE_WHILE_FEARED))
                                     return SPELL_FAILED_FLEEING;
                                 break;
                             case SPELL_AURA_MOD_SILENCE:
                             case SPELL_AURA_MOD_PACIFY:
                             case SPELL_AURA_MOD_PACIFY_SILENCE:
-                            // Exceptions is Berserking Rage, Tremor Totem, and Will of the Forsaken
-                            // Fist of Fury, Rising Sun Kick, Jab, Black Out Kick, Chi wave, Expel Harm
-                                if (m_spellInfo->PreventionType == SPELL_PREVENTION_TYPE_PACIFY || 
-                                m_spellInfo->Id != 8143 ||   // Tremor Totem
-                                m_spellInfo->Id != 18499 ||  // Berserker Rage
-                                m_spellInfo->Id != 7744 ||   // Will of the Forsaken
-                                m_spellInfo->Id != 113656)   // Fist of Fury
+                                if (m_spellInfo->PreventionType == SPELL_PREVENTION_TYPE_PACIFY) 
                                     return SPELL_FAILED_PACIFIED;
                                 else if (m_spellInfo->PreventionType == SPELL_PREVENTION_TYPE_SILENCE)
                                     return SPELL_FAILED_SILENCED;

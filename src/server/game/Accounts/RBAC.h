@@ -1,10 +1,9 @@
 /*
- * Copyright (C) 2008-2015 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2014 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 3 of the License, or (at your
+ * Free Software Foundation; either version 2 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -681,9 +680,19 @@ enum RBACPermissions
     RBAC_PERM_COMMAND_WP_SHOW                                = 774,
     RBAC_PERM_COMMAND_MODIFY_CURRENCY                        = 775,
     RBAC_PERM_COMMAND_DEBUG_PHASE                            = 776,
-    RBAC_PERM_COMMAND_RESET_SPEC                             = 778,
-	RBAC_PERM_COMMAND_GUILD_GIVEXP							 = 779,
-	RBAC_PERM_COMMAND_GUILD_LEVELUP							 = 780,
+    RBAC_PERM_COMMAND_SUPPORT_BUG                            = 777,
+    RBAC_PERM_COMMAND_SUPPORT_BUG_ASSIGN                     = 778,
+    RBAC_PERM_COMMAND_SUPPORT_BUG_CLOSE                      = 779,
+    RBAC_PERM_COMMAND_SUPPORT_BUG_CLOSEDLIST                 = 780,
+    RBAC_PERM_COMMAND_SUPPORT_BUG_COMMENT                    = 781,
+    RBAC_PERM_COMMAND_SUPPORT_BUG_DELETE                     = 782,
+    RBAC_PERM_COMMAND_SUPPORT_BUG_LIST                       = 783,
+    RBAC_PERM_COMMAND_SUPPORT_BUG_UNASSIGN                   = 784,
+    RBAC_PERM_COMMAND_SUPPORT_BUG_VIEW                       = 785,
+    RBAC_PERM_COMMAND_SUPPORT_BUG_RESET                      = 786,
+    RBAC_PERM_COMMAND_RESET_SPEC                             = 787,
+    RBAC_PERM_COMMAND_GUILD_GIVEXP							 = 788,
+    RBAC_PERM_COMMAND_GUILD_LEVELUP							 = 789,
 
     // custom permissions 1006+
     RBAC_PERM_COMMAND_QUESTCOMPLETER                         = 1002,

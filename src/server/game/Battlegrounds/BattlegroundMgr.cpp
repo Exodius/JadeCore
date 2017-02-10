@@ -1,10 +1,9 @@
 /*
- * Copyright (C) 2008-2015 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2014 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 3 of the License, or (at your
+ * Free Software Foundation; either version 2 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -37,7 +36,7 @@
 #include "BattlegroundTP.h"
 #include "BattlegroundBFG.h"
 #include "BattlegroundDG.h"
-#include "BattlegroundSM.h"
+#include "BattlegroundSSM.h"
 #include "BattlegroundTOK.h"
 #include "Chat.h"
 #include "Map.h"
@@ -845,7 +844,7 @@ Battleground* BattlegroundMgr::CreateNewBattleground(BattlegroundTypeId original
             bg = new BattlegroundDG(*(BattlegroundDG*)bg_template);
             break;
         case BATTLEGROUND_SM:
-            bg = new BattlegroundSM(*(BattlegroundSM*)bg_template);
+            bg = new BattlegroundSSM(*(BattlegroundSSM*)bg_template);
             break;
         case BATTLEGROUND_RB:
         case BATTLEGROUND_AA:
@@ -955,7 +954,7 @@ bool BattlegroundMgr::CreateBattleground(CreateBattlegroundData& data)
             bg = new BattlegroundDG;
             break;
         case BATTLEGROUND_SM:
-            bg = new BattlegroundSM;
+            bg = new BattlegroundSSM;
             break;
         default:
             return false;

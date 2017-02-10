@@ -1,10 +1,9 @@
 /*
- * Copyright (C) 2008-2015 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2014 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 3 of the License, or (at your
+ * Free Software Foundation; either version 2 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -1611,7 +1610,7 @@ void Guild::HandleQuery(WorldSession* session)
 
 void Guild::SendGuildRankInfo(WorldSession* session) const
 {
-    WorldPacket data(SMSG_GUILD_RANK, 100);
+    WorldPacket data(SMSG_GUILD_RANKS, 100);
 
     data.WriteBits(_GetRanksSize(), 17);
 
@@ -1639,7 +1638,7 @@ void Guild::SendGuildRankInfo(WorldSession* session) const
     }
 
     session->SendPacket(&data);
-    TC_LOG_DEBUG("guild", "SMSG_GUILD_RANK [%s]", session->GetPlayerInfo().c_str());
+    TC_LOG_DEBUG("guild", "SMSG_GUILD_RANKS [%s]", session->GetPlayerInfo().c_str());
 }
 
 void Guild::HandleSetMOTD(WorldSession* session, std::string const& motd)
@@ -2236,8 +2235,7 @@ void Guild::HandleUpdateRank(WorldSession* session, uint32 GuildID, bool RankId)
         if (!RankInfo1 || !RankInfo2)
             return;
 
-        RankInfo tmp = NULL;
-        tmp = *RankInfo2;
+        RankInfo tmp = *RankInfo2;
         RankInfo2->SetName(RankInfo1->GetName());
         RankInfo2->SetRights(RankInfo1->GetRights());
         RankInfo1->SetName(tmp.GetName());
@@ -2620,7 +2618,7 @@ void Guild::SendLoginInfo(WorldSession* session)
     /*
         Login sequence:
           SMSG_GUILD_EVENT - GE_MOTD
-          SMSG_GUILD_RANK
+          SMSG_GUILD_RANKS
           SMSG_GUILD_EVENT - GE_SIGNED_ON
           -- learn perks
           SMSG_GUILD_REPUTATION_WEEKLY_CAP
@@ -2931,8 +2929,9 @@ void Guild::MassInviteToEvent(WorldSession* session, uint32 minLevel, uint32 max
 {
     uint32 count = 0;
 
-    WorldPacket data(SMSG_CALENDAR_FILTER_GUILD);
-    data << uint32(count); // count placeholder
+    ByteBuffer inviteeData;
+    WorldPacket data(SMSG_CALENDAR_EVENT_INITIAL_INVITE);
+    data.WriteBits(count, 23); // count placeholder
 
     for (Members::const_iterator itr = m_members.begin(); itr != m_members.end(); ++itr)
     {
@@ -2949,13 +2948,33 @@ void Guild::MassInviteToEvent(WorldSession* session, uint32 minLevel, uint32 max
 
         if (member->GetGUID() != session->GetPlayer()->GetGUID() && level >= minLevel && level <= maxLevel && member->IsRankNotLower(minRank))
         {
-            data.appendPackGUID(member->GetGUID());
-            data << uint8(0); // unk
+            ObjectGuid guid = member->GetGUID();
+            data.WriteBit(guid[1]);
+            data.WriteBit(guid[7]);
+            data.WriteBit(guid[5]);
+            data.WriteBit(guid[0]);
+            data.WriteBit(guid[4]);
+            data.WriteBit(guid[3]);
+            data.WriteBit(guid[6]);
+            data.WriteBit(guid[2]);
+
+            inviteeData << uint8(level);
+            inviteeData.WriteByteSeq(guid[3]);
+            inviteeData.WriteByteSeq(guid[5]);
+            inviteeData.WriteByteSeq(guid[4]);
+            inviteeData.WriteByteSeq(guid[6]);
+            inviteeData.WriteByteSeq(guid[7]);
+            inviteeData.WriteByteSeq(guid[0]);
+            inviteeData.WriteByteSeq(guid[2]);
+            inviteeData.WriteByteSeq(guid[1]);
+
             ++count;
         }
     }
 
-    data.put<uint32>(0, count);
+    data.FlushBits();
+    data.PutBits(0, count, 23);
+    data.append(inviteeData);
 
     session->SendPacket(&data);
 }

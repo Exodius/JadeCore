@@ -1,6 +1,4 @@
 # Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
-# Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
-# Copyright (C) 2011-2016 Project SkyFire <http://www.projectskyfire.org/>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -16,7 +14,11 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
 add_subdirectory(genrev)
-add_subdirectory(server)
+add_subdirectory(common)
+
+if(SERVERS)
+  add_subdirectory(server)
+endif(SERVERS)
 
 if(TOOLS)
   add_definitions(-std=c++11)

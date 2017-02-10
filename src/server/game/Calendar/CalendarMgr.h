@@ -1,10 +1,9 @@
 /*
- * Copyright (C) 2008-2015 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2014 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 3 of the License, or (at your
+ * Free Software Foundation; either version 2 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -127,18 +126,25 @@ enum CalendarError
 #define CALENDAR_MAX_GUILD_EVENTS   100
 #define CALENDAR_MAX_INVITES        100
 
+struct CalendarInvitePacketInfo
+{
+    ObjectGuid Guid;
+    uint8 Status;
+    uint8 ModerationRank;
+};
+
 struct CalendarInvite
 {
     public:
-        CalendarInvite(CalendarInvite const& calendarInvite, uint64 inviteId, uint64 eventId)
+        CalendarInvite(CalendarInvite const& calendarInvite, uint64 inviteId, uint64 eventId, uint64 creatorGuid)
         {
             _inviteId = inviteId;
             _eventId = eventId;
             _invitee = calendarInvite.GetInviteeGUID();
-            _senderGUID = calendarInvite.GetSenderGUID();
-            _statusTime = calendarInvite.GetStatusTime();
-            _status = calendarInvite.GetStatus();
-            _rank = calendarInvite.GetRank();
+            _senderGUID = creatorGuid;
+            _statusTime = 946684800;
+            _status = creatorGuid == calendarInvite.GetInviteeGUID() ? CALENDAR_STATUS_CONFIRMED : CALENDAR_STATUS_INVITED;
+            _rank = creatorGuid == calendarInvite.GetInviteeGUID() ? CALENDAR_RANK_OWNER : (calendarInvite.GetRank() == CALENDAR_RANK_OWNER ? CALENDAR_RANK_MODERATOR : calendarInvite.GetRank());
             _text = calendarInvite.GetText();
         }
 
@@ -190,28 +196,27 @@ struct CalendarInvite
 struct CalendarEvent
 {
     public:
-        CalendarEvent(CalendarEvent const& calendarEvent, uint64 eventId)
+        CalendarEvent(CalendarEvent const& calendarEvent, uint64 eventId, uint64 newCreatorGuid)
         {
             _eventId = eventId;
-            _creatorGUID = calendarEvent.GetCreatorGUID();
+            _creatorGUID = newCreatorGuid;
             _guildId = calendarEvent.GetGuildId();
             _type = calendarEvent.GetType();
             _dungeonId = calendarEvent.GetDungeonId();
             _eventTime = calendarEvent.GetEventTime();
             _flags = calendarEvent.GetFlags();
-            _timezoneTime = calendarEvent.GetTimeZoneTime();
             _title = calendarEvent.GetTitle();
             _description = calendarEvent.GetDescription();
         }
 
         CalendarEvent(uint64 eventId, uint64 creatorGUID, uint32 guildId, CalendarEventType type, int32 dungeonId,
-            time_t eventTime, uint32 flags, time_t timezoneTime, std::string title, std::string description) :
+            time_t eventTime, uint32 flags, std::string title, std::string description) :
             _eventId(eventId), _creatorGUID(creatorGUID), _guildId(guildId), _type(type), _dungeonId(dungeonId),
-            _eventTime(eventTime), _flags(flags), _timezoneTime(timezoneTime), _title(title),
+            _eventTime(eventTime), _flags(flags), _title(title),
             _description(description) { }
 
         CalendarEvent() : _eventId(1), _creatorGUID(0), _guildId(0), _type(CALENDAR_TYPE_OTHER), _dungeonId(-1), _eventTime(0),
-            _flags(0), _timezoneTime(0), _title(""), _description("") { }
+            _flags(0), _title(""), _description("") { }
 
         ~CalendarEvent();
 
@@ -242,9 +247,6 @@ struct CalendarEvent
         void SetFlags(uint32 flags) { _flags = flags; }
         uint32 GetFlags() const { return _flags; }
 
-        void SetTimeZoneTime(time_t timezoneTime) { _timezoneTime = timezoneTime; }
-        time_t GetTimeZoneTime() const { return _timezoneTime; }
-
         bool IsGuildEvent() const { return _flags & CALENDAR_FLAG_GUILD_EVENT; }
         bool IsGuildAnnouncement() const { return _flags & CALENDAR_FLAG_WITHOUT_INVITES; }
 
@@ -259,7 +261,6 @@ struct CalendarEvent
         int32 _dungeonId;
         time_t _eventTime;
         uint32 _flags;
-        time_t _timezoneTime;
         std::string _title;
         std::string _description;
 };
@@ -295,9 +296,9 @@ class CalendarMgr
         CalendarInviteStore const& GetEventInvites(uint64 eventId);
         CalendarInviteStore GetPlayerInvites(uint64 guid);
 
-        void FreeEventId(uint64 id);
+        void FreeEventId(uint64);
         uint64 GetFreeEventId();
-        void FreeInviteId(uint64 id);
+        void FreeInviteId(uint64);
         uint64 GetFreeInviteId();
 
         uint32 GetPlayerNumPending(uint64 guid);
@@ -321,7 +322,7 @@ class CalendarMgr
         void SendCalendarEventUpdateAlert(CalendarEvent const& calendarEvent, time_t oldEventTime);
         void SendCalendarEventStatus(CalendarEvent const& calendarEvent, CalendarInvite const& invite);
         void SendCalendarEventRemovedAlert(CalendarEvent const& calendarEvent);
-        void SendCalendarEventModeratorStatusAlert(CalendarEvent const& calendarEvent, CalendarInvite const& invite);
+        void SendCalendarEventModeratorStatus(CalendarEvent const& calendarEvent, CalendarInvite const& invite);
         void SendCalendarClearPendingAction(uint64 guid);
         void SendCalendarCommandResult(uint64 guid, CalendarError err, char const* param = NULL);
 

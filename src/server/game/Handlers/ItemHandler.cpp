@@ -1,10 +1,9 @@
 /*
- * Copyright (C) 2008-2015 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2014 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 3 of the License, or (at your
+ * Free Software Foundation; either version 2 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -1473,7 +1472,7 @@ void WorldSession::HandleCancelTempEnchantmentOpcode(WorldPacket& recvData)
 
 void WorldSession::HandleItemRefundInfoRequest(WorldPacket& recvData)
 {
-    TC_LOG_DEBUG("network", "WORLD: CMSG_ITEM_REFUND_INFO");
+    TC_LOG_DEBUG("network", "WORLD: CMSG_GET_ITEM_PURCHASE_DATA");
 
     ObjectGuid guid;
 
@@ -1492,7 +1491,7 @@ void WorldSession::HandleItemRefundInfoRequest(WorldPacket& recvData)
         return;
     }
 
-    GetPlayer()->SendRefundInfo(item);
+    GetPlayer()->RefundItem(item);
 }
 
 void WorldSession::HandleItemRefund(WorldPacket &recvData)

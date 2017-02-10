@@ -1,6 +1,4 @@
 # Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
-# Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
-# Copyright (C) 2011-2016 Project SkyFire <http://www.projectskyfire.org/>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -19,7 +17,10 @@
 project(JadeCore)
 
 # Fix compile
-SET(CMAKE_C_FLAGS "-std=gnu99" CACHE STRING "" FORCE)
+  if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    set (CMAKE_C_FLAGS "-std=gnu99 ${CMAKE_C_FLAGS}")
+  endif ()
+
 
 # CMake policies (can not be handled elsewhere)
 cmake_minimum_required(VERSION 2.8.9)
@@ -60,6 +61,8 @@ endif()
 
 include(CheckPlatform)
 
+include(GroupSources)
+
 # basic packagesearching and setup (further support will be needed, this is a preliminary release!)
 set(OPENSSL_EXPECTED_VERSION 1.0.0)
 set(ACE_EXPECTED_VERSION 5.8.3)
@@ -69,14 +72,17 @@ find_package(ACE REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(Threads REQUIRED)
 
-if( NOT USE_MYSQL_SOURCES )
-  find_package(MySQL REQUIRED)
-endif()
+include(ConfigureBoost)
+find_package(MySQL REQUIRED)
 
 if( UNIX )
   find_package(Readline)
   find_package(ZLIB)
   find_package(BZip2)
+endif()
+
+if(NOT WITHOUT_GIT)
+  find_package(Git)
 endif()
 
 include(CheckCXXCompilerFlag)

@@ -1,7 +1,5 @@
 /*
  * Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2011-2016 Project SkyFire <http://www.projectskyfire.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -1122,10 +1120,13 @@ void ExtractDB2Files(int l, bool basicLocale)
     {
         std::string outputPath = output_path;
         outputPath += "/db2/";
+        CreateDir(outputPath);
+
         if (!basicLocale)
         {
-            outputPath += Locales[l];
-            outputPath += "/";
+         outputPath += Locales[l];
+         outputPath += "/";
+         CreateDir(outputPath);
         }
 
         std::string filename;

@@ -1,7 +1,5 @@
 /*
  * Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2011-2016 Project SkyFire <http://www.projectskyfire.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -427,7 +425,13 @@ void World::LoadConfigSettings(bool reload)
     SetMotd(sConfigMgr->GetStringDefault("Motd", "Welcome to a Trinity Core Server."));
 
     ///- Read ticket system setting from the config file
-    m_bool_configs[CONFIG_ALLOW_TICKETS] = sConfigMgr->GetBoolDefault("AllowTickets", true);
+    m_bool_configs[CONFIG_TICKETS_FEEDBACK_SYSTEM_ENABLED] = sConfigMgr->GetBoolDefault("TicketSystem.FeedBackTickets", true);
+    m_bool_configs[CONFIG_TICKETS_GM_ENABLED] = sConfigMgr->GetBoolDefault("TicketSystem.GMTickets", true);
+    if (reload)
+    {
+        sTicketMgr->SetFeedBackSystemStatus(m_bool_configs[CONFIG_TICKETS_FEEDBACK_SYSTEM_ENABLED]);
+        sTicketMgr->SetGmTicketSystemStatus(m_bool_configs[CONFIG_TICKETS_GM_ENABLED]);
+    }
 
     ///- Get string for new logins (newly created characters)
     SetNewCharString(sConfigMgr->GetStringDefault("PlayerStart.String", ""));
@@ -1787,10 +1791,10 @@ void World::SetInitialWorldSettings()
     sObjectMgr->LoadFactionChangeTitles();
 
     TC_LOG_INFO("server.loading", "Loading GM tickets...");
-    sTicketMgr->LoadTickets();
+    sTicketMgr->LoadGmTickets();
 
-    TC_LOG_INFO("server.loading", "Loading GM surveys...");
-    sTicketMgr->LoadSurveys();
+    TC_LOG_INFO("server.loading", "Loading GM bugs...");
+    sTicketMgr->LoadBugTickets();
 
     TC_LOG_INFO("server.loading", "Loarding Rated Stas...");
     sRatedMgr->LoadRatedInfo();

@@ -1,10 +1,9 @@
 ﻿/*
- * Copyright (C) 2008-2015 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2014 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 3 of the License, or (at your
+ * Free Software Foundation; either version 2 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -4023,7 +4022,7 @@ void Player::SendInitialSpells()
 
     uint16 spellCount = 0;
 
-    WorldPacket data(SMSG_INITIAL_SPELLS, (1+2+4*m_spells.size()+2+m_spellCooldowns.size()*(2+2+2+4+4)));
+    WorldPacket data(SMSG_SEND_KNOWN_SPELLS, (1+2+4*m_spells.size()+2+m_spellCooldowns.size()*(2+2+2+4+4)));
     data.WriteBit(0);
 
     size_t bitPos = data.bitwpos();
@@ -7432,7 +7431,7 @@ int16 Player::GetSkillTempBonusValue(uint32 skill) const
 
 void Player::SendActionButtons(uint32 state) const
 {
-    WorldPacket data(SMSG_ACTION_BUTTONS, 1+(MAX_ACTION_BUTTONS*8));
+    WorldPacket data(SMSG_UPDATE_ACTION_BUTTONS, 1+(MAX_ACTION_BUTTONS*8));
 
     // Bits
     for (uint8 button = 0; button < MAX_ACTION_BUTTONS; ++button)
@@ -8430,7 +8429,7 @@ void Player::SendNewCurrency(uint32 id) const
         return;
 
     ByteBuffer currencyData;
-    WorldPacket packet(SMSG_INIT_CURRENCY, 3 + 1 + 4 + 4 + 4 + 4);
+    WorldPacket packet(SMSG_SETUP_CURRENCY, 3 + 1 + 4 + 4 + 4 + 4);
     packet.WriteBits(1, 21);
 
     CurrencyTypesEntry const* entry = sCurrencyTypesStore.LookupEntry(id);
@@ -8472,7 +8471,7 @@ void Player::SendNewCurrency(uint32 id) const
 void Player::SendCurrencies() const
 {
     ByteBuffer currencyData;
-    WorldPacket packet(SMSG_INIT_CURRENCY, 3 + (_currencyStorage.size() * (1 + 4 + 4 + 4 + 4)));
+    WorldPacket packet(SMSG_SETUP_CURRENCY, 3 + (_currencyStorage.size() * (1 + 4 + 4 + 4 + 4)));
     size_t count_pos = packet.bitwpos();
     packet.WriteBits(_currencyStorage.size(), 21);
 
@@ -17148,9 +17147,9 @@ bool Player::SatisfyQuestLog(bool msg)
 
     if (msg)
     {
-        WorldPacket data(SMSG_QUESTLOG_FULL, 0);
+        WorldPacket data(SMSG_QUEST_LOG_FULL, 0);
         GetSession()->SendPacket(&data);
-        TC_LOG_DEBUG("network", "WORLD: Sent SMSG_QUESTLOG_FULL");
+        TC_LOG_DEBUG("network", "WORLD: Sent SMSG_QUEST_LOG_FULL");
     }
     return false;
 }
@@ -18272,17 +18271,17 @@ void Player::SendQuestComplete(Quest const* quest)
 {
     if (quest)
     {
-        WorldPacket data(SMSG_QUESTUPDATE_COMPLETE, 4);
+        WorldPacket data(SMSG_QUEST_UPDATE_COMPLETE, 4);
         data << uint32(quest->GetQuestId());
         GetSession()->SendPacket(&data);
-        TC_LOG_DEBUG("network", "WORLD: Sent SMSG_QUESTUPDATE_COMPLETE quest = %u", quest->GetQuestId());
+        TC_LOG_DEBUG("network", "WORLD: Sent SMSG_QUEST_UPDATE_COMPLETE quest = %u", quest->GetQuestId());
     }
 }
 
 void Player::SendQuestReward(Quest const* quest, uint32 XP)
 {
     uint32 questId = quest->GetQuestId();
-    TC_LOG_DEBUG("network", "WORLD: Sent SMSG_QUESTGIVER_QUEST_COMPLETE quest = %u", questId);
+    TC_LOG_DEBUG("network", "WORLD: Sent SMSG_QUEST_GIVER_QUEST_COMPLETE quest = %u", questId);
     sGameEventMgr->HandleQuestComplete(questId);
 
     uint32 xp;
@@ -18299,7 +18298,7 @@ void Player::SendQuestReward(Quest const* quest, uint32 XP)
         moneyReward = uint32(quest->GetRewMoney() + int32(quest->GetRewMoneyMaxLevel() * sWorld->getRate(RATE_DROP_MONEY)));
     }
 
-    WorldPacket data(SMSG_QUESTGIVER_QUEST_COMPLETE, 4 + 4 + 4 + 4 + 4 + 4 + 1);
+    WorldPacket data(SMSG_QUEST_GIVER_QUEST_COMPLETE, 4 + 4 + 4 + 4 + 4 + 4 + 1);
     data.WriteBit(1);                                      // FIXME: unknown bits, common values sent
     data.WriteBit(0);
     data.FlushBits();
@@ -18318,11 +18317,11 @@ void Player::SendQuestFailed(uint32 questId, InventoryResult reason)
 {
     if (questId)
     {
-        WorldPacket data(SMSG_QUESTGIVER_QUEST_FAILED, 4 + 4);
+        WorldPacket data(SMSG_QUEST_GIVER_QUEST_FAILED, 4 + 4);
         data << uint32(questId);
         data << uint32(reason);                             // failed reason (valid reasons: 4, 16, 50, 17, 74, other values show default message)
         GetSession()->SendPacket(&data);
-        TC_LOG_DEBUG("network", "WORLD: Sent SMSG_QUESTGIVER_QUEST_FAILED");
+        TC_LOG_DEBUG("network", "WORLD: Sent SMSG_QUEST_GIVER_QUEST_FAILED");
     }
 }
 
@@ -18330,19 +18329,22 @@ void Player::SendQuestTimerFailed(uint32 quest_id)
 {
     if (quest_id)
     {
-        WorldPacket data(SMSG_QUESTUPDATE_FAILEDTIMER, 4);
+        WorldPacket data(SMSG_QUEST_UPDATE_FAILEDTIMER, 4);
         data << uint32(quest_id);
         GetSession()->SendPacket(&data);
-        TC_LOG_DEBUG("network", "WORLD: Sent SMSG_QUESTUPDATE_FAILEDTIMER");
+        TC_LOG_DEBUG("network", "WORLD: Sent SMSG_QUEST_UPDATE_FAILEDTIMER");
     }
 }
 
 void Player::SendCanTakeQuestResponse(QuestFailedReason msg) const
 {
-    WorldPacket data(SMSG_QUESTGIVER_QUEST_INVALID, 4);
+    WorldPacket data(SMSG_QUEST_GIVER_QUEST_INVALID, 5);
+    data.WriteBit(1);
+    data.FlushBits();
     data << uint32(msg);
     GetSession()->SendPacket(&data);
-    TC_LOG_DEBUG("network", "WORLD: Sent SMSG_QUESTGIVER_QUEST_INVALID");
+	
+    TC_LOG_DEBUG("network", "WORLD: Sent SMSG_QUEST_GIVER_QUEST_INVALID");
 }
 
 void Player::SendQuestConfirmAccept(const Quest* quest, Player* pReceiver)
@@ -18398,7 +18400,7 @@ void Player::SendPushToPartyResponse(Player* player, uint8 msg)
 
 void Player::SendQuestUpdateAddCredit(Quest const* quest, QuestObjective const* objective, ObjectGuid guid, uint16 oldCount, uint16 addCount)
 {
-    WorldPacket data(SMSG_QUESTUPDATE_ADD_CREDIT, 1 + 8 + 2 + 1 + 4 + 2 + 4);
+    WorldPacket data(SMSG_QUEST_UPDATE_ADD_CREDIT, 1 + 8 + 2 + 1 + 4 + 2 + 4);
     data << uint16(oldCount + addCount);
     data << uint8(objective->Type);
     data << uint32(quest->GetQuestId());
@@ -18411,7 +18413,7 @@ void Player::SendQuestUpdateAddCredit(Quest const* quest, QuestObjective const* 
 
     GetSession()->SendPacket(&data);
 
-    TC_LOG_DEBUG("network", "WORLD: Sent SMSG_QUESTUPDATE_ADD_KILL");
+    TC_LOG_DEBUG("network", "WORLD: Sent SMSG_QUEST_UPDATE_ADD_KILL");
 
     uint16 logSlot = FindQuestSlot(quest->GetQuestId());
     if (logSlot < MAX_QUEST_LOG_SIZE)
@@ -18420,13 +18422,13 @@ void Player::SendQuestUpdateAddCredit(Quest const* quest, QuestObjective const* 
 
 void Player::SendQuestUpdateAddPlayer(Quest const* quest, QuestObjective const* objective, uint16 oldCount, uint16 addCount)
 {
-    WorldPacket data(SMSG_QUESTUPDATE_ADD_PVP_KILL, 4 + 2);
+    WorldPacket data(SMSG_QUEST_UPDATE_ADD_PVP_KILL, 4 + 2);
     data << uint32(quest->GetQuestId());
     data << uint32(oldCount + addCount);
 
     GetSession()->SendPacket(&data);
 
-    TC_LOG_DEBUG("network", "WORLD: Sent SMSG_QUESTUPDATE_ADD_PVP_KILL");
+    TC_LOG_DEBUG("network", "WORLD: Sent SMSG_QUEST_UPDATE_ADD_PVP_KILL");
 
     uint16 logSlot = FindQuestSlot(quest->GetQuestId());
     if (logSlot < MAX_QUEST_LOG_SIZE)
@@ -25249,7 +25251,7 @@ void Player::SendInitialPacketsBeforeAddToMap()
 
     SendEquipmentSetList();
 
-    data.Initialize(SMSG_LOGIN_SETTIMESPEED, 20);
+    data.Initialize(SMSG_LOGIN_SET_TIME_SPEED, 20);
     data << uint32(0);
     data.AppendPackedTime(sWorld->GetGameTime());
     data << uint32(0);
@@ -25259,7 +25261,7 @@ void Player::SendInitialPacketsBeforeAddToMap()
 
     GetReputationMgr().SendForceReactions();                // SMSG_SET_FORCED_REACTIONS
 
-    // SMSG_TALENTS_INFO x 2 for pet (unspent points and talents in separate packets...)
+    // SMSG_UPDATE_TALENT_DATA x 2 for pet (unspent points and talents in separate packets...)
     // SMSG_PET_GUIDS
     // SMSG_UPDATE_WORLD_STATE
     // SMSG_POWER_UPDATE
@@ -28113,7 +28115,7 @@ void Player::SendTalentsInfoData(bool pet /*= false*/)
         return;
     }
 
-    WorldPacket data(SMSG_TALENTS_INFO, 50);
+    WorldPacket data(SMSG_UPDATE_TALENT_DATA, 50);
     BuildPlayerTalentsInfoData(&data);
     GetSession()->SendPacket(&data);
 }
@@ -28665,7 +28667,7 @@ void Player::SendTimeSync()
 {
     m_timeSyncQueue.push(m_movementCounter++);
 
-    WorldPacket data(SMSG_TIME_SYNC_REQ, 4);
+    WorldPacket data(SMSG_TIME_SYNC_REQUEST, 4);
     data << uint32(m_timeSyncQueue.back());
     GetSession()->SendPacket(&data);
 
@@ -28674,7 +28676,7 @@ void Player::SendTimeSync()
     m_timeSyncServer = getMSTime();
 
     if (m_timeSyncQueue.size() > 3)
-        TC_LOG_ERROR("network", "Not received CMSG_TIME_SYNC_RESP for over 30 seconds from player %u (%s), possible cheater", GetGUIDLow(), GetName().c_str());
+        TC_LOG_ERROR("network", "Not received SMSG_TIME_SYNC_REQUEST for over 30 seconds from player %u (%s), possible cheater", GetGUIDLow(), GetName().c_str());
 }
 
 void Player::SetReputation(uint32 factionentry, uint32 value)
@@ -28698,6 +28700,7 @@ void Player::SendDeclineGuildInvitation(std::string declinerName, bool autoDecli
     data.WriteBits(declinerName.length(), 6);
     data.WriteBit(autoDecline);
     data.WriteBit(0); // unk bool
+	data.FlushBits();
     data.WriteString(declinerName);
     data << (int32)0;
     GetSession()->SendPacket(&data);
@@ -28750,11 +28753,17 @@ void Player::SendRefundInfo(Item* item)
     }
 
     ObjectGuid guid = item->GetGUID();
-    WorldPacket data(SMSG_ITEM_REFUND_INFO_RESPONSE, 8+4+4+4+4*4+4*4+4+4);
-    data.WriteGuidMask(guid, 3, 5, 7, 6, 2, 4, 0, 1);
+    WorldPacket data(SMSG_SET_ITEM_PURCHASE_DATA, 8 + 4 + 4 + 4 + 4 * 4 + 4 * 4 + 4 + 4);
+    data.WriteBit(guid[1]);
+    data.WriteBit(guid[5]);
+    data.WriteBit(guid[3]);
+    data.WriteBit(guid[0]);
+    data.WriteBit(guid[7]);
+    data.WriteBit(guid[2]);
+    data.WriteBit(guid[3]);
+    data.WriteBit(guid[4]);
     data.FlushBits();
 
-    data.WriteByteSeq(guid[7]);
     data << uint32(GetTotalPlayedTime() - item->GetPlayedTime());
     for (uint8 i = 0; i < MAX_ITEM_EXT_COST_ITEMS; ++i)                             // item cost data
     {
@@ -28762,7 +28771,13 @@ void Player::SendRefundInfo(Item* item)
         data << uint32(iece->RequiredItem[i]);
     }
 
-    data.WriteGuidBytes(guid, 6, 4, 3, 2);
+    data.WriteByteSeq(guid[1]);
+    data.WriteByteSeq(guid[6]);
+    data.WriteByteSeq(guid[4]);
+    data << uint32(0);          // Flags ?
+    data.WriteByteSeq(guid[5]);
+    data << uint32(item->GetPaidMoney());               // money cost
+
     for (uint8 i = 0; i < MAX_ITEM_EXT_COST_CURRENCIES; ++i)                       // currency cost data
     {
         if (iece->RequirementFlags & (ITEM_EXT_COST_CURRENCY_REQ_IS_SEASON_EARNED_1 << i))
@@ -28779,10 +28794,11 @@ void Player::SendRefundInfo(Item* item)
         data << uint32(iece->RequiredCurrency[i]);
     }
 
-    data.WriteGuidBytes(guid, 1, 5);
-    data << uint32(0);
+    data.WriteByteSeq(guid[3]);
+    data.WriteByteSeq(guid[7]);
+    data.WriteByteSeq(guid[2]);
     data.WriteByteSeq(guid[0]);
-    data << uint32(item->GetPaidMoney());               // money cost
+
     GetSession()->SendPacket(&data);
 }
 
@@ -28812,11 +28828,21 @@ bool Player::AddItem(uint32 itemId, uint32 count)
 void Player::SendItemRefundResult(Item* item, ItemExtendedCostEntry const* iece, uint8 error)
 {
     ObjectGuid guid = item->GetGUID();
-    WorldPacket data(SMSG_ITEM_REFUND_RESULT, 1 + 1 + 8 + 4*8 + 4 + 4*8 + 1);
-    data.WriteGuidMask(guid, 4, 5, 1, 6, 7, 0, 3, 2);
+    WorldPacket data(SMSG_ITEM_PURCHASE_REFUND_RESULT, 1 + 1 + 8 + 4 * 8 + 4 + 4 * 8);
+    data.WriteBit(guid[3]);
+    data.WriteBit(guid[1]);
+    data.WriteBit(guid[5]);
+    data.WriteBit(guid[6]);
+    data.WriteBit(guid[4]);
+    data.WriteBit(guid[0]);
+    data.WriteBit(guid[7]);
     data.WriteBit(!error);
+    data.WriteBit(guid[2]);
     data.WriteBit(item->GetPaidMoney() > 0);
     data.FlushBits();
+
+    data.WriteByteSeq(guid[5]);
+    data.WriteByteSeq(guid[3]);
     if (!error)
     {
         for (uint8 i = 0; i < MAX_ITEM_EXT_COST_CURRENCIES; ++i)
@@ -28835,18 +28861,22 @@ void Player::SendItemRefundResult(Item* item, ItemExtendedCostEntry const* iece,
             data << uint32(iece->RequiredCurrency[i]);
         }
 
-        data << uint32(item->GetPaidMoney());               // money cost
-
         for (uint8 i = 0; i < MAX_ITEM_EXT_COST_ITEMS; ++i) // item cost data
         {
             data << uint32(iece->RequiredItemCount[i]);
             data << uint32(iece->RequiredItem[i]);
         }
+
+        data << uint32(item->GetPaidMoney());               // money cost
     }
 
-    data.WriteGuidBytes(guid, 0, 3, 1, 6, 4, 2, 7, 5);
+    data.WriteByteSeq(guid[1]);
+    data.WriteByteSeq(guid[7]);
+    data.WriteByteSeq(guid[4]);
+    data.WriteByteSeq(guid[6]);
+    data.WriteByteSeq(guid[0]);
+    data.WriteByteSeq(guid[2]);
 
-    data << uint8(error);                              // error code
     GetSession()->SendPacket(&data);
 }
 

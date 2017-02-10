@@ -1,6 +1,4 @@
 # Copyright (C) 2013-2016 JadeCore <https://www.jadecore.tk/>
-# Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
-# Copyright (C) 2011-2016 Project SkyFire <http://www.projectskyfire.org/>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -16,7 +14,12 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
 # Need to pass old ${CMAKE_BINARY_DIR} as param because its different at build stage
-add_custom_target(revision.h ALL
-  COMMAND ${CMAKE_COMMAND} -DBUILDDIR=${CMAKE_BINARY_DIR} -P ${CMAKE_SOURCE_DIR}/cmake/genrev.cmake
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+add_custom_target(revision_data.h ALL
+  COMMAND "${CMAKE_COMMAND}" -DBUILDDIR="${CMAKE_BINARY_DIR}" -P "${CMAKE_SOURCE_DIR}/cmake/genrev.cmake" "${CMAKE_BINARY_DIR}"
+  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
 )
+
+set_target_properties(revision_data.h
+    PROPERTIES
+      FOLDER
+"server")
